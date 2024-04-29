@@ -11,7 +11,7 @@ Compliance for the purposes of this library is defined as zero errors for footpr
 
 Open the KiCAD Plugin and Content Manager (PCM), click "Manage..." in the top right, and add the following URL to your list of repositories:
 ```
-https://raw.githubusercontent.com/nutmeg-project/kicad-repository/nutmeg/main/repository.json
+https://raw.githubusercontent.com/nutmeg-project/kicad-registry/nutmeg/main/repository.json
 ```
 Then, using the dropdown in the PCM, switch to "Nutmeg's KiCAD Repository" and click on the "Libraries" tab.
 
