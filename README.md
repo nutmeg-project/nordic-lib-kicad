@@ -1,9 +1,3 @@
-# Nordic Semiconductor KiCAD Library
-
-[![GitHub stars](https://img.shields.io/github/stars/hlord2000/nordic-lib-kicad)](https://github.com/hlord2000/nordic-lib-kicad/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/hlord2000/nordic-lib-kicad)](https://github.com/hlord2000/nordic-lib-kicad/network)
-[![GitHub issues](https://img.shields.io/github/issues/hlord2000/nordic-lib-kicad)](https://github.com/hlord2000/nordic-lib-kicad/issues)
----
 # A KiCAD 8 library for all modern Nordic Semiconductor parts.
 <p align="center">
   <img src="img/img.png" alt="centered image" />
@@ -17,9 +11,9 @@ Compliance for the purposes of this library is defined as zero errors for footpr
 
 Open the KiCAD Plugin and Content Manager (PCM), click "Manage..." in the top right, and add the following URL to your list of repositories:
 ```
-https://raw.githubusercontent.com/hlord2000/hlord2000-kicad-repository/main/repository.json
+https://raw.githubusercontent.com/nutmeg-project/kicad-repository/nutmeg/main/repository.json
 ```
-Then, using the dropdown in the PCM, switch to "hlord2000's KiCAD Repository" and click on the "Libraries" tab.
+Then, using the dropdown in the PCM, switch to "Nutmeg's KiCAD Repository" and click on the "Libraries" tab.
 
 ## Seeking pull-requests for any footprint/symbol/3D model marked 🚧
 
@@ -82,3 +76,49 @@ Then, using the dropdown in the PCM, switch to "hlord2000's KiCAD Repository" an
 | [nPM1300](https://www.nordicsemi.com/products/nPM1300) QFN |✅|✅|✅|✅| 
 | [nPM1100](https://www.nordicsemi.com/products/nPM1100) WLCSP |✅|✅|🚧|✅| 
 | [nPM1100](https://www.nordicsemi.com/products/nPM1100) QFN |✅|✅|✅|✅| 
+
+---
+
+## How to create a new release
+
+First make sure to have a valid personal access token generated for the organization. Go into to a repository owner or
+administrator account settings. Click on **Developer Settings**, **Personal Access Tokens**, **Fine-grained tokens**.
+
+You should find a token called `kicad-registry automation`. If the token does not exists (e.g. this is a fresh fork) you
+will have to create one as follows:
+
+- Click on **Generate New Token**
+- Name the token `kicad-registry automation`.
+- Choose an expiration
+- Set the resource owner to `nutmeg-project`.
+- Select the option `Only select repositories`
+- Click in **Select Repositories** and mark `nutmeg/kicad-registry`
+- Under **Permissions/Repository Permissions/Actions** select  `Read-Write`
+- Click on **Generate Token** at the bottom of the page
+- Copy the token value as it will be required to create an organization secret
+
+Now we have to create the secret:
+
+- Open the **Nutmeg Project** organization page
+- Click on **Settings**
+- Under **Secrets and variables** select **Actions**
+- In the *Secrets* tab, click on **New organization secret**
+- Name it `KICAD_REGISTRY_TOKEN`
+- Copy the value of the `kicad-registry automation` token into the *Value* text box
+- Under **Repository access** select *Selected repositories*
+- Click on the cog icon and select `nutmeg/nordic-lib-kicad`
+- Click on **Add secret**
+
+Now with the correct token and secret configured we can create a new release as follows:
+
+1. Tag the release using the format: `nutmeg/YYYY-MM-DD`
+2. Add a [new relase](https://github.com/nutmeg-project/nordic-lib-kicad/releases/new)
+   - Make sure to select the correct tag you created in the first step (not a branch!)
+   - Leave the title empty so it will use the tag name by default.
+   - Description is optional
+3. The `KiCAD PCM packaging` workflow should automatically run.
+   It is located in [Actions](https://github.com/nutmeg-project/nordic-lib-kicad/actions)
+4. After the release is updated the catalog at nutmeg-project/kicad-repository should be automatically rebuilt to add
+   the new package.
+5. Open https://github.com/nutmeg-project/kicad-registry and check that the `packages.json` has been updated. The last
+   commit message should also indicate the package version added.

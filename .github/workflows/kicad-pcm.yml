@@ -11,35 +11,43 @@ on:  # yamllint disable-line rule:truthy
 
 jobs:
   create_archive:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Get latest tag
-        uses: oprypin/find-latest-tag@v1
+        uses: nutmeg-project/find-latest-tag@v1
         with:
-          repository: hlord2000/nordic-lib-kicad
+          repository: nutmeg-project/nordic-lib-kicad
           releases-only: true
         id: latest-release
 
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Split tag name to get the version
+        env:
+          LATEST_RELEASE_TAG: ${{ steps.latest-release.outputs.tag }}
+        id: latest-version
+        run: echo "::set-output name=fragment::${LATEST_RELEASE_TAG##*/}"
+
       - name: Create archive
         run: sh ./PCM/create_pcm_archive.sh ${{ steps.latest-release.outputs.tag }}
 
       - name: Upload zip as asset to release
-        uses: svenstaro/upload-release-action@v2
+        uses: nutmeg-project/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./PCM/KiCAD-PCM-${{ steps.latest-release.outputs.tag }}.zip
-          asset_name: KiCAD-PCM-${{ steps.latest-release.outputs.tag }}.zip
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          file: ./PCM/KiCAD-PCM-${{ steps.latest-version.outputs.fragment }}.zip
+          asset_name: KiCAD-PCM-${{ steps.latest-version.outputs.fragment }}.zip
           overwrite: true
           tag: ${{ steps.latest-release.outputs.tag }}
 
       - name: Trigger custom kicad repo rebuild
-        uses: benc-uk/workflow-dispatch@v1
+        uses: nutmeg-project/workflow-dispatch@v1
         with:
           workflow: Rebuild repository
-          ref: refs/heads/main
-          repo: hlord2000/hlord2000-kicad-repository
-          token: ${{ secrets.PERSONAL_TOKEN }}
-          inputs: '{ "VERSION": "${{env.VERSION}}", "DOWNLOAD_SHA256": "${{env.DOWNLOAD_SHA256}}", "DOWNLOAD_SIZE": "${{env.DOWNLOAD_SIZE}}", "DOWNLOAD_URL": "${{env.DOWNLOAD_URL}}", "INSTALL_SIZE": "${{env.INSTALL_SIZE}}" }'
+          ref: refs/heads/nutmeg/main
+          repo: nutmeg-project/kicad-registry
+          token: "${{ secrets.KICAD_REGISTRY_TOKEN }}"
+          inputs: '{ "PACKAGE": "${{env.PACKAGE}}", "VERSION": "${{env.VERSION}}", "DOWNLOAD_SHA256": "${{env.DOWNLOAD_SHA256}}", "DOWNLOAD_SIZE": "${{env.DOWNLOAD_SIZE}}", "DOWNLOAD_URL": "${{env.DOWNLOAD_URL}}", "INSTALL_SIZE": "${{env.INSTALL_SIZE}}" }'
