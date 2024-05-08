@@ -1,9 +1,9 @@
 {
     "$schema": "https://go.kicad.org/pcm/schemas/v1",
-    "name": "hlord2000",
+    "name": "nutmeg",
     "description": "Nordic Semiconductor Symbol, Footprint, and 3D Library",
     "description_full": "",
-    "identifier": "com.github.hlord2000.nordic-lib-kicad",
+    "identifier": "com.github.nutmeg-project.nordic-lib-kicad",
     "type": "library",
     "author": {
         "name": "hlord2000",
@@ -12,14 +12,14 @@
         }
     },
     "maintainer": {
-        "name": "hlord2000",
+        "name": "nutmeg-project",
         "contact": {
-            "github": "hlord2000",
+            "github": "nutmeg-project",
         }
     },
     "license": "MIT",
     "resources": {
-        "homepage": "https://github.com/hlord2000/nordic-lib-kicad"
+        "homepage": "https://github.com/nutmeg-project/nordic-lib-kicad"
     },
     "versions": [{
         "version": "VERSION_HERE",
